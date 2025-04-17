@@ -30,4 +30,72 @@
     
   
   
+    
+    
+    <entry>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>音乐</title>
+      <link href="/music/index.html"/>
+      <url>/music/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>友链</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[<ul><li><p>class_name: 友情链接<br>class_desc: 那些人，那些事<br>link_list:</p><ul><li>name: Hexo<br>link: <a href="https://hexo.io/zh-tw/">https://hexo.io/zh-tw/</a><br>avatar: <a href="https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg">https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg</a><br>descr: 快速、简单且强大的网志框架</li></ul></li><li><p>class_name: 网站<br>class_desc: 值得推荐的网站<br>link_list:</p><ul><li>name: Youtube<br>link: <a href="https://www.youtube.com/">https://www.youtube.com/</a><br>avatar: <a href="https://i.loli.net/2020/05/14/9ZkGg8v3azHJfM1.png">https://i.loli.net/2020/05/14/9ZkGg8v3azHJfM1.png</a><br>descr: 视频网站</li><li>name: Weibo<br>link: <a href="https://www.weibo.com/">https://www.weibo.com/</a><br>avatar: <a href="https://i.loli.net/2020/05/14/TLJBum386vcnI1P.png">https://i.loli.net/2020/05/14/TLJBum386vcnI1P.png</a><br>descr: 中国最大社交分享平台</li><li>name: Twitter<br>link: <a href="https://twitter.com/">https://twitter.com/</a><br>avatar: <a href="https://i.loli.net/2020/05/14/5VyHPQqR6LWF39a.png">https://i.loli.net/2020/05/14/5VyHPQqR6LWF39a.png</a><br>descr: 社交分享平台</li></ul></li></ul>]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/movies/index.html"/>
+      <url>/movies/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>标签</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+  
 </search>
