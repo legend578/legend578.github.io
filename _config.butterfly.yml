@@ -1065,8 +1065,7 @@ CDN:
     # katex:
     # katex_copytex:
     # lazyload:
-    local_search:
-    enable: true
+    # local_search:
     # main:
     # main_css:
     # mathjax:
