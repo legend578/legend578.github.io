@@ -18,11 +18,8 @@ nav:
 
 menu:
   首页: / || fas fa-home
-  搜索: /search/ || fas fa-search
-  文档 || fas fa-archive:
-    标签: /tags/ || fas fa-tags
-    归档: /categories/ || fas fa-folder-open
-  分类: /categories/ || fas fa-folder-open
+  标签: /tags/ || fas fa-tags
+  归档: /categories/ || fas fa-folder-open
   友链: /link/ || fas fa-link
   关于: /about/ || fas fa-heart
 
@@ -458,8 +455,8 @@ search:
   # Local Search
   local_search:
     # Preload the search data when the page loads.
-    preload: true
     enable: true
+    preload: true
     CDN:
 
   # Docsearch
