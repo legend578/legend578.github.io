@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>工作小计</title>
+      <link href="/2025/04/16/%E5%B7%A5%E4%BD%9C%E5%B0%8F%E8%AE%A1/"/>
+      <url>/2025/04/16/%E5%B7%A5%E4%BD%9C%E5%B0%8F%E8%AE%A1/</url>
+      
+        <content type="html"><![CDATA[<h3 id="日志输出"><a href="#日志输出" class="headerlink" title="日志输出"></a>日志输出</h3><p>日志输出时都使用log.info等，不使用sys.out.println</p><hr><h2 id="业务积累"><a href="#业务积累" class="headerlink" title="业务积累"></a>业务积累</h2><h3 id="经纬度定位"><a href="#经纬度定位" class="headerlink" title="经纬度定位"></a>经纬度定位</h3><p>业务中的地图某个点位置是根据经纬度来定位的。但是不同单位使用的地图不一样，可能是百度地图、高德地图等等，但是我们系统中使用的地图只能是一种，所以放入到我们系统中需要进行一个个地图的适配是比较繁琐的，我们统一在后端将不同的地图类型转换为同一个地图类型，然后输出给前端进行响应返回</p><h3 id="加密算法"><a href="#加密算法" class="headerlink" title="加密算法"></a>加密算法</h3><p>当需要对一张表里的某些字段进行加解密时</p><p>先在controller层创建一个加解密接口，参数为：1.表名tabName，2.加解密参数operation(0为需要加密，1为需要解密)</p><p>**加密流程： **</p><p>然后将该operation参数往下传递，如果operation为0，此时有一张加解密关联表（该表记录了需要加解密的字段），通过遍历该关联表，获取到需要加密的字段，通过SM2算法来进行对字段进行加密（使用SM2算法时，需要先连接密码机，创建连接，生成SM2公钥，进行加密，关闭连接），加密后返回该加密的字段，更新表中原来的字段</p><p><strong>解密流程：</strong></p><p>和加密流程相似</p><p>当operation字段为1，获取关联表中需要加密的字段进行解密（创建连接，连接到密码机后，生成SM2私钥，通过该私钥对字段进行解密，最后关闭连接），返回解密后的数据更新表</p><p><img src="D:\blog\source\images\image-20250416142545879.png" alt="图片"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>vscode更新博客要点</title>
+      <link href="/2025/04/15/vscode%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2%E8%A6%81%E7%82%B9/"/>
+      <url>/2025/04/15/vscode%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2%E8%A6%81%E7%82%B9/</url>
+      
+        <content type="html"><![CDATA[<h2 id="hexo博客更新"><a href="#hexo博客更新" class="headerlink" title="hexo博客更新"></a>hexo博客更新</h2><p>需要新增一篇博客时直接在bolg文件夹下hexo new “文件名”</p><hr><h2 id="推送信息"><a href="#推送信息" class="headerlink" title="推送信息"></a>推送信息</h2><p>当在vscode更新时需要每次从本地提交到远程，再重新启动才会生效<br>修改完内容后：</p><ol><li>git add -A(添加到缓冲区)</li><li>git commit -m “此次修改的描述信息”</li><li>git push(推送到远程;如果出现fatal: unable to access ‘<a href="https://github.com/legend578/legend578.github.io.git/">https://github.com/legend578/legend578.github.io.git/</a>‘: Failed to connect to 127.0.0.1 port 7897 after 2107 ms: Could not connect to server则进行开启clash代理)<br>hexo d（使得网站重新生效）</li></ol><hr>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
