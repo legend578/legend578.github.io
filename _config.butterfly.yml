@@ -18,19 +18,22 @@ nav:
 
 menu:
   首页: / || fas fa-home
+  时间轴: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
-  归档: /categories/ || fas fa-folder-open
+  分类: /categories/ || fas fa-folder-open
   友链: /link/ || fas fa-link
   关于: /about/ || fas fa-heart
+
 
 # --------------------------------------
 # Code Blocks Settings
 # --------------------------------------
-highlight_theme: mac
-highlight_copy: true
-highlight_shrink: true
-code_word_wrap: true
-highlight_height_limit: 230
+highlight_theme: mac  #  darker / pale night / light / ocean / mac / mac light / false 代码主题
+highlight_copy: true # 复制按钮
+highlight_lang: false # 是否显示代码语言
+highlight_shrink: false # true: 代码块默认不展开 / false: 代码块默认展开 | none: 展开并隐藏折叠按钮
+highlight_height_limit: false # unit: px
+code_word_wrap: true #代码自动换行，关闭滚动条
 
 code_blocks:
   # Code block theme: darker / pale night / light / ocean / false
@@ -71,7 +74,7 @@ disable_top_img: false
 default_top_img:
 
 # The banner image of index page
-index_img: https://clubimg.club.vmall.com/data/attachment/forum/202011/08/21520195o5eux63aifthgc.jpg
+index_img: /img/index_img.jpg
 
 # The banner image of archive page
 archive_img:
@@ -97,7 +100,7 @@ footer_img: false
 
 # Website Background
 # Can set it to color or image url
-background: https://img.shetu66.com/2023/11/22/1700647678359062.jpg
+background: /img/background.png
 
 cover:
   # Disable the cover or not
@@ -199,14 +202,15 @@ index_post_content:
 # Post Settings
 # --------------------------------------
 
+# toc (目錄)
 toc:
   post: true
   page: false
-  number: true
-  expand: false
-  # Only for post
-  style_simple: false
+  number: false
+  expand: true # 是否展开
+  style_simple: false # for post
   scroll_percent: true
+
 
 post_copyright:
   enable: true
@@ -454,10 +458,11 @@ search:
 
   # Local Search
   local_search:
-    # Preload the search data when the page loads.
     enable: true
-    preload: true
-    CDN:
+    labels:
+      input_placeholder: Search for Posts
+      hits_empty: "We didn't find any results for the search: ${query}" # 如果没有查到内容相关内容显示
+
 
   # Docsearch
   # https://docsearch.algolia.com/
@@ -1049,10 +1054,10 @@ CDN:
     # egjs_infinitegrid:
     # fancybox:
     # fancybox_css:
-    fireworks:
-    enable: true
-    zIndex: 9999 # -1 or 9999
-    mobile: false
+    # fireworks:
+    # enable: true
+    # zIndex: 9999 # -1 or 9999
+    # mobile: false
     # fontawesome:
     # gitalk:
     # gitalk_css:
