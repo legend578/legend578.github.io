@@ -74,7 +74,7 @@ disable_top_img: false
 default_top_img:
 
 # The banner image of index page
-index_img: /img/index_img.jpg
+index_img: https://ts1.tc.mm.bing.net/th/id/R-C.1aa5c0105cbbd6e6f19c9a1e3960b003?rik=LPyEsSF6kKM3WA&riu=http%3a%2f%2fn.sinaimg.cn%2fsinakd20119%2f0%2fw2048h1152%2f20220725%2f871b-ba494b1608cfb7093e1780b2360244be.jpg&ehk=SzVcHUrnbLk2P8E41a1P2uX9diKJsUFF2K9yqoFtUjM%3d&risl=&pid=ImgRaw&r=0
 
 # The banner image of archive page
 archive_img:
@@ -100,7 +100,7 @@ footer_img: false
 
 # Website Background
 # Can set it to color or image url
-background: /img/background.png
+background: https://pic3.zhimg.com/v2-596755683bf85cb049211fa5a315f2ca_r.jpg?source=1940ef5c
 
 cover:
   # Disable the cover or not
