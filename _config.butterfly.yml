@@ -74,7 +74,7 @@ disable_top_img: false
 default_top_img:
 
 # The banner image of index page
-index_img: https://ts1.tc.mm.bing.net/th/id/R-C.1aa5c0105cbbd6e6f19c9a1e3960b003?rik=LPyEsSF6kKM3WA&riu=http%3a%2f%2fn.sinaimg.cn%2fsinakd20119%2f0%2fw2048h1152%2f20220725%2f871b-ba494b1608cfb7093e1780b2360244be.jpg&ehk=SzVcHUrnbLk2P8E41a1P2uX9diKJsUFF2K9yqoFtUjM%3d&risl=&pid=ImgRaw&r=0
+index_img: https://haowallpaper.com/link/common/file/previewFileImg/16783537523051904
 
 # The banner image of archive page
 archive_img:
@@ -100,7 +100,7 @@ footer_img: false
 
 # Website Background
 # Can set it to color or image url
-background: https://pic3.zhimg.com/v2-596755683bf85cb049211fa5a315f2ca_r.jpg?source=1940ef5c
+background: https://ts1.tc.mm.bing.net/th/id/R-C.f60c26775faac1dcc50e556ab04a4817?rik=5BnHDrd%2fItbFQA&riu=http%3a%2f%2fp.qpic.cn%2fdnfbbspic%2f0%2fdnfbbs_dnfbbs_dnf_gamebbs_qq_com_forum_201908_21_070544bbcrklyullsn7b99.jpg%2f0&ehk=UcrOvve%2bEazY%2b87LejIXEqlL8PFMUc3u%2fwwkjgRt1NA%3d&risl=&pid=ImgRaw&r=0
 
 cover:
   # Disable the cover or not
