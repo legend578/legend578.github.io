@@ -4,6 +4,50 @@
   
     
     <entry>
+      <title>TLS协议</title>
+      <link href="/2025/06/19/TLS%E5%8D%8F%E8%AE%AE/"/>
+      <url>/2025/06/19/TLS%E5%8D%8F%E8%AE%AE/</url>
+      
+        <content type="html"><![CDATA[<p>TLS协议是所属于HTTPS中使用的协议</p><h1 id="HTTP和HTTPS的区别"><a href="#HTTP和HTTPS的区别" class="headerlink" title="HTTP和HTTPS的区别"></a>HTTP和HTTPS的区别</h1><ul><li><p>传输数据形式：HTTP为明文传输数据，外部进行抓包就可以获取请求参数和数据，比较危险；HTTPS引入<strong>SSL&#x2F;TLS协议</strong>（SSL协议是TLS协议的前身），TLS会对数据加密后再传输，安全性高，同时具有数字证书保证传输过程的数据不会被篡改</p></li><li><p>建立连接：HTTP请求之前只需要通过TCP三次握手，而HTTPS请求之前需要通过TCP三次握手后，再通过TLS四次握手</p></li><li><p>端口号：HTTP默认为80端口，HTTPS默认为443端口</p></li><li><p>数字证书：HTTPS通过第三方CA颁发的数字证书来验证请求者的身份和数据是否被篡改；而HTTP不具有数字证书来验证身份</p></li></ul><h1 id="TLS协议作用"><a href="#TLS协议作用" class="headerlink" title="TLS协议作用"></a>TLS协议作用</h1><p>当HTTPS经过TCP三次握手之后，还会进行TLS四次握手</p><p>TLS主要是为了保证数据通信的安全性，不会轻易将数据的明文形式显示出来</p><h2 id="TLS的加密算法"><a href="#TLS的加密算法" class="headerlink" title="TLS的加密算法"></a>TLS的加密算法</h2><h3 id="1-对称加密算法"><a href="#1-对称加密算法" class="headerlink" title="1.对称加密算法"></a>1.对称加密算法</h3><ul><li><p>该算法只有一个密钥（该密钥不能明文传递），通过该密钥可以对数据进行加密和解密操作</p></li><li><p>适用于对大量数据加解密操作（加解密速度快）</p></li><li><p>AES、DES算法</p></li></ul><h3 id="2-非对称加密算法"><a href="#2-非对称加密算法" class="headerlink" title="2.非对称加密算法"></a>2.非对称加密算法</h3><ul><li><p>该算法具有一对密钥（公钥和私钥），一般使用公钥对数据加密，使用私钥对数据解密。公钥可以随意分发，私钥需要保护起来</p></li><li><p>适用于对少量数据加解密（加解密速度较慢）；一般用于密钥交换和数字签名</p></li><li><p>RSA、ECC算法</p></li></ul><h3 id="3-哈希算法"><a href="#3-哈希算法" class="headerlink" title="3.哈希算法"></a>3.哈希算法</h3><ul><li>哈希算法是一种单向算法，可以通过哈希算法对数据进行哈希计算生成哈希数据，该哈希数据不能被解密来获取原始数据，只能通过相同的哈希算法对原始数据计算后得到哈希值来比对是否相同</li><li>适用于校验数据完整性</li><li>MD5算法</li></ul><h2 id="HTTPS的混合加密"><a href="#HTTPS的混合加密" class="headerlink" title="HTTPS的混合加密"></a>HTTPS的混合加密</h2><p>HTTPS将对称加密和非对称加密混合使用</p><ul><li>首先使用非对称加密算法来交换“对称密钥”</li><li>后续整个通信过程中，使用该“对称密钥”对明文数据对称加密后再传输</li></ul><h1 id="TLS四次握手"><a href="#TLS四次握手" class="headerlink" title="TLS四次握手"></a>TLS四次握手</h1><p>当客户端和服务端TCP三次握手后，会进行TLS四次握手</p><h2 id="TLS第一次握手"><a href="#TLS第一次握手" class="headerlink" title="TLS第一次握手"></a>TLS第一次握手</h2><p>客户端对服务端发送hello信息，并生成一个随机数和密码套件传递过去</p><h2 id="TLS第二次握手"><a href="#TLS第二次握手" class="headerlink" title="TLS第二次握手"></a>TLS第二次握手</h2><p>服务端收到客户端消息后，会选择一套合适的密码套件（密钥交换算法、签名算法、对称加密算法、摘要算法），生成第二个随机数，还有其服务端对应的数字证书一并发送给客户端</p><h3 id="数字证书–保证公钥持有者身份不被冒充"><a href="#数字证书–保证公钥持有者身份不被冒充" class="headerlink" title="数字证书–保证公钥持有者身份不被冒充"></a>数字证书–保证公钥持有者身份不被冒充</h3><ul><li><p>数字证书中包含服务端公钥和CA公钥，CA公钥是用来解密数字证书的，校验数字证书是否合法，而服务端公钥可以直接从数字证书中取出，用于后续非对称加密算法；数字证书的作用是用来认证公钥持有者身份，防止公钥被冒充发送给客户端</p></li><li><p>数字证书通过CA机构（相当于网络世界的公安局）颁发，具有可信度</p></li></ul><h2 id="TLS第三次握手"><a href="#TLS第三次握手" class="headerlink" title="TLS第三次握手"></a>TLS第三次握手</h2><ul><li><p>在进行第三次握手前，会使用CA公钥校验数字证书是否合法，然后从数字证书中取出服务端公钥</p></li><li><p>客户端会生成第三个随机数，使用服务端公钥加密后传输给服务端，服务端用私钥解密得到第三个随机数，此时客户端和服务端都拥有了三个随机数</p></li><li><p>客户端和服务端双方都根据这三个随机数生成对称密钥；然后客户端发送开始使用对称加密的消息给服务端，并且对之前所有的数据做个摘要，然后对称加密一下发送给服务端校验，校验对称加密是否可用，和数据是否被篡改</p></li></ul><h2 id="TLS第四次握手"><a href="#TLS第四次握手" class="headerlink" title="TLS第四次握手"></a>TLS第四次握手</h2><p>服务端同样地，也向客户端发送准备开始使用对称加密的消息，然后对之前的数据做个摘要，对称加密后发送给客户端，客户端校验成功后则完成四次握手</p><p><strong>TLS四次握手成功后，则开始使用对称加密算法加密数据后传输</strong></p><h3 id="数字签名–防止数据被篡改或者身份被冒充"><a href="#数字签名–防止数据被篡改或者身份被冒充" class="headerlink" title="数字签名–防止数据被篡改或者身份被冒充"></a>数字签名–防止数据被篡改或者身份被冒充</h3><p><strong>加密只能确保数据不被监听</strong></p><ul><li><p>假设Alice是接收方，Bob是发送方</p></li><li><p>黑客也可以使用 Alice 的公钥冒充 Bob 给 Alice 发邮件啊，因为 Alice 的公钥本来就是公开的，任何人都可以获得。</p></li><li><p>由于 黑客 也可以获得 Alice 公钥，所以没法防止 黑客 伪造和篡改，并且对于 Alice 而言，她无法分辨出邮件到底是 Eve 发的还是 Bob</p></li></ul><p>所以需要数字签名，私钥加密，公钥解密</p><ul><li><p>首先Bob将公钥发送给Alice，然后后续传输数据使用私钥对内容数字签名</p></li><li><p>Bob 自己的私钥，Bob 用自己的私钥对邮件内容计算一个「签名」，将「签名」和邮件内容一起发送出去，接受者 Alice 可以使用 Bob 的公钥验证这个签名是否正确，这就叫「验签」（发送方和接收方都拥有自己的一对公钥、私钥）</p></li></ul><h4 id="数字签名的计算"><a href="#数字签名的计算" class="headerlink" title="数字签名的计算"></a>数字签名的计算</h4><p>一般做法是先将原数据进行 Hash 运算（hash算法），得到的 Hash 值就叫做「摘要」。</p><p>「摘要」就像人的指纹一样，可以代表一个人，只要内容发生了改变，计算出来的摘要也应该变化。</p><p>「摘要」最好是不可逆转的，一般使用开头提到的 MD5 作为 Hash 函数，MD5 输出的结果固定位 128 位</p><p>哈希算法得到的数字签名是不可逆的</p><p><img src="https://j114chuk046.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmI1NzM1YzI4MjcyMjdjMTJkYjRhMTc3NTMxYTc1NzhfOUhjM2RnbjFla3RMcWo4R2JSUmM1Z29PQmpTeFdjUHdfVG9rZW46RkxsOWJGems3b0JtMVl4czhiZWM1Nld0bnVmXzE3NTAzMzYxOTc6MTc1MDMzOTc5N19WNA" alt="img"></p><p>再通过对得到的摘要使用私钥加密后得到数字签名</p><h4 id="怎么使用数字签名验证身份"><a href="#怎么使用数字签名验证身份" class="headerlink" title="怎么使用数字签名验证身份"></a>怎么使用数字签名验证身份</h4><p>发送数据会有数字签名+数据内容</p><p><img src="https://j114chuk046.feishu.cn/space/api/box/stream/download/asynccode/?code=MjUxM2NkNTNlMzE3Y2FjNWU3YTZjMDBmOGI3NjMwNzFfTjAyV0hVSnEzQUxTNjlzZjNMWU1iUFFiUWV4aUdYQXZfVG9rZW46WG41T2JjNnk3b05uOFl4Wmd6c2NYMVVYbmdkXzE3NTAzMzYxOTc6MTc1MDMzOTc5N19WNA" alt="img"></p><ul><li>接受者 Alice 收到后，取下数字签名，同时用 Bob 的公钥解密，得到「摘要1」，证明确实是 Bob 发的。</li></ul><p>( 画外音：如果使用 Bob 的公钥验证签名出错，那么签名一定不是 Bob 的私钥生成的）</p><ul><li><p>再对邮件内容使用相同的散列函数计算「摘要2」，与上面得到的「摘要1」进行对比，两者一致就说明信息未被篡改。</p></li><li><p>数字签名是通过对邮件正文哈希计算，然后使用私钥加密而生成的，所以使用公钥解密数字签名后，得到的是哈希计算后的邮件正文</p></li></ul><p>这样两部分证明发送者身份和保证数据未被篡改。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络知识 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>http协议的不同版本区别</title>
+      <link href="/2025/06/19/http%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E5%8C%BA%E5%88%AB/"/>
+      <url>/2025/06/19/http%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<h1 id="HTTP-1-0和HTTP-1-1的区别"><a href="#HTTP-1-0和HTTP-1-1的区别" class="headerlink" title="HTTP&#x2F;1.0和HTTP&#x2F;1.1的区别"></a>HTTP&#x2F;1.0和HTTP&#x2F;1.1的区别</h1><p>相比于HTTP1.0，HTTP1.1有以下优点：</p><ul><li>默认长连接：HTTP1.0版本支持长连接，但是默认为短连接，而1.1版本默认为长连接</li><li>请求管道化：在1.0版本中，请求和响应都是串行的，需要等待请求和响应都完成后，才可以发起下一次http请求；在1.1版本中，支持请求管道化，http请求可以并行发送，但是响应还是需要按照顺序进行</li><li>增加host字段：1.1版本中在请求头中增加host字段，使得一台服务器可以容纳多个域名</li></ul><h1 id="HTTP-1-1和HTTP-2-0"><a href="#HTTP-1-1和HTTP-2-0" class="headerlink" title="HTTP&#x2F;1.1和HTTP&#x2F;2.0"></a>HTTP&#x2F;1.1和HTTP&#x2F;2.0</h1><p>相比对HTTP1.1，HTTP2.0有以下优点：</p><ul><li>请求和响应都可以并行处理：HTTP1.1的响应不能并行处理，只能按照顺序单个逐一处理；HTTP2.0使用stream（通过stream ID在TCP连接中构建有序的HTTP数据），每个stream对应一个http的请求和响应，多个stream可以复用同一个TCP连接，所以可以并行处理http的请求和响应</li><li>压缩头部和二进制传输：HTTP2.0使用算法压缩了请求头部，并且数据以二进制形式传输，HTTP1.1以超文本形式传输&#x3D;》所以HTTP2.0传输效率更高</li></ul><h1 id="HTTP-2-0和HTTP-3-0"><a href="#HTTP-2-0和HTTP-3-0" class="headerlink" title="HTTP&#x2F;2.0和HTTP&#x2F;3.0"></a>HTTP&#x2F;2.0和HTTP&#x2F;3.0</h1><p>相比对于HTTP2.0，HTTP3.0有以下优点：</p><ul><li>使用的协议不同：HTTP2.0使用TCP协议；而HTTP3.0使用UDP协议，但由于UDP的不可靠传输，所以在应用层中实现了QUIC协议来保证UDP传输的连接管理，拥塞控制，流量控制等功能</li></ul><p>QUIC解决问题：</p><ul><li><strong>解决HTTP2.0中队头阻塞问题</strong>：由于2.0版本中stream有先后顺序，所以当处于前面的stream丢包，后续的stream也需要等待前面的stream处理完成后，才可以后面的stream；而在QUIC中的stream都是没有依赖关系的，所以并行传输时不会互相影响</li><li><strong>TCP 和 TLS 握手时延</strong>：2.0版本中的TCP 三次握手和 TLS 四次握手，共有 3-RTT 的时延；3.0版本中只需要进行TCP三次握手和TLS握手建立，只有一个RTT时延</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络知识 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> http版本 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>空指针异常的原因和解决</title>
       <link href="/2025/05/30/%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%92%8C%E8%A7%A3%E5%86%B3/"/>
       <url>/2025/05/30/%E7%A9%BA%E6%8C%87%E9%92%88%E5%BC%82%E5%B8%B8%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%92%8C%E8%A7%A3%E5%86%B3/</url>
@@ -21,8 +65,14 @@
       <link href="/2025/05/19/Cookie-Session-Jwt%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E4%BD%BF%E7%94%A8/"/>
       <url>/2025/05/19/Cookie-Session-Jwt%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
       
-        <content type="html"><![CDATA[<h1 id="为什么需要Cookie和Session"><a href="#为什么需要Cookie和Session" class="headerlink" title="为什么需要Cookie和Session"></a>为什么需要Cookie和Session</h1><p>原因：由于HTTP是无状态的，HTTP的每个请求都是独立的，服务器不会保存客户端之前的请求和会话状态，所以单单依靠HTTP，是无法实现用户登录后，访问其他页面也是使用之前的登录状态，而是会跳转到重新登录页面。</p><p>所以需要Cookie和Session来实现用户登录状态的保存！</p><h2 id="Cookie和Session的使用"><a href="#Cookie和Session的使用" class="headerlink" title="Cookie和Session的使用"></a>Cookie和Session的使用</h2><p>1.用户登录时将用户名和密码传递给服务端进行校验身份</p><p>2.校验身份成功后，服务端会创建一个session对象用来存储用户信息（session保存在内存中），并返回一个session_id给客户端</p><p>3.客户端将session_id存入cookie中，后续客户端每次进行访问该服务端进行携带该session_id即可</p><p>4.服务端接受到session_id后，根据该id去查询之前保存的session信息</p><img src="C:\Users\彭思凯\AppData\Roaming\Typora\typora-user-images\image-20250519175704245.png" alt="image-20250519175704245" style="zoom:80%;" /><h2 id="使用Cookie和Session保存用户状态的缺点"><a href="#使用Cookie和Session保存用户状态的缺点" class="headerlink" title="使用Cookie和Session保存用户状态的缺点"></a>使用Cookie和Session保存用户状态的缺点</h2><p>session是保存在服务器的内存中的。当服务端部署的机器是集群的情况，那么这些机器都需要保存相同的session信息，如果有一台机器没有保存到该session信息，那么进行负载均衡访问该机器时，就会跳转到登录页面重新登录</p><h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p><strong>1.使用MySQL和Redis来保存用户信息</strong></p><p>由于session保存在内存中，所以服务端是集群的情况时，需要全都同步该session信息。所以可以使用数据库保存session_id，当用户传递一个session_id过来时，服务端可以去数据库查询是否存在该session_id来判断用户的登录状态。缺点：存在单点故障（如果数据库宕机，则保存的信息就访问不到或者丢失，如果部署数据库集群又会过于麻烦）</p><p><strong>2.使用JWT来进行无状态登录</strong></p><p>JWT工作流程：</p><p>1.用户登录时将用户名和密码传递给服务端，服务端校验用户身份成功后会生成JWT返回给客户端</p><p>2.客户端将该JWT保存在本地，之后每次访问服务端时都在请求头中携带该JWT</p><p>3.服务端接受到客户端请求后，从请求头中提取出JWT内容</p><p>4.验证JWT签名：</p><ul><li>服务端使用预存的密钥（如 HMAC 的共享密钥或 RSA 的公钥），重新计算 JWT 的签名。</li><li>对比计算的签名与 JWT 中的第三段（签名段）是否一致</li></ul><p><strong>客户端保存的JWT格式(Authorization)：Header.Payload.Signature</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET /restful/products/1 HTTP/1.1</span><br><span class="line">Host: icyfenix.cn</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Authorization: Bearer eyJhbGciOiJXVCJ9.eyJ1c2VyXpeCJ9.539WMzbAn8bheflL8</span><br></pre></td></tr></table></figure><img src="C:\Users\彭思凯\AppData\Roaming\Typora\typora-user-images\image-20250519180502861.png" alt="image-20250519180502861"  /><h2 id="Cookie和Session的区别"><a href="#Cookie和Session的区别" class="headerlink" title="Cookie和Session的区别"></a>Cookie和Session的区别</h2><p>存储位置：Cookie存放在本地浏览器中，session存储在服务端中</p><p>存储大小：Cookie存放在浏览器中，大小是有限制的，不能超过4K；而session存储大小没有限制</p><p>安全性：因为Cookie存放在浏览器中，安全性较低；session存放在服务端中，安全性高一点</p><p>有效时间：Cookie有效时间比session长</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="为什么需要Cookie和Session"><a href="#为什么需要Cookie和Session" class="headerlink" title="为什么需要Cookie和Session"></a>为什么需要Cookie和Session</h1><p>原因：由于HTTP是无状态的，HTTP的每个请求都是独立的，服务器不会保存客户端之前的请求和会话状态，所以单单依靠HTTP，是无法实现用户登录后，访问其他页面也是使用之前的登录状态，而是会跳转到重新登录页面。</p><p>所以需要Cookie和Session来实现用户登录状态的保存！</p><h2 id="Cookie和Session的使用"><a href="#Cookie和Session的使用" class="headerlink" title="Cookie和Session的使用"></a>Cookie和Session的使用</h2><p>1.用户登录时将用户名和密码传递给服务端进行校验身份</p><p>2.校验身份成功后，服务端会创建一个session对象用来存储用户信息（session保存在内存中），并返回一个session_id给客户端</p><p>3.客户端将session_id存入cookie中，后续客户端每次进行访问该服务端进行携带该session_id即可</p><p>4.服务端接受到session_id后，根据该id去查询之前保存的session信息</p><img src="C:\Users\彭思凯\AppData\Roaming\Typora\typora-user-images\image-20250519175704245.png" alt="image-20250519175704245" style="zoom:80%;" /><h2 id="使用Cookie和Session保存用户状态的缺点"><a href="#使用Cookie和Session保存用户状态的缺点" class="headerlink" title="使用Cookie和Session保存用户状态的缺点"></a>使用Cookie和Session保存用户状态的缺点</h2><p>session是保存在服务器的内存中的。当服务端部署的机器是集群的情况，那么这些机器都需要保存相同的session信息，如果有一台机器没有保存到该session信息，那么进行负载均衡访问该机器时，就会跳转到登录页面重新登录</p><h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p><strong>1.使用MySQL和Redis来保存用户信息</strong></p><p>由于session保存在内存中，所以服务端是集群的情况时，需要全都同步该session信息。所以可以使用数据库保存session_id，当用户传递一个session_id过来时，服务端可以去数据库查询是否存在该session_id来判断用户的登录状态。缺点：存在单点故障（如果数据库宕机，则保存的信息就访问不到或者丢失，如果部署数据库集群又会过于麻烦）</p><p><strong>2.使用JWT来进行无状态登录</strong></p><p>JWT工作流程：</p><p>1.用户登录时将用户名和密码传递给服务端，服务端校验用户身份成功后会生成JWT返回给客户端</p><p>2.客户端将该JWT保存在本地，之后每次访问服务端时都在请求头中携带该JWT（JWT只会存放在客户端中，服务端只负责检验JWT是否合法，可以从JWT中获取到用户会话信息等，所以服务端无需存储JWT，实现无状态）</p><p>3.服务端接受到客户端请求后，从请求头中提取出JWT内容</p><p>4.验证JWT签名：</p><ul><li>服务端使用预存的密钥（服务器统一密钥，对于不同的客户端都使用相同的密钥），结合JWT中的头部、负荷、密钥使用算法生成签名。</li><li>对比生成的签名与 JWT 中的第三段（签名段）是否一致</li></ul><p>5.JWT中包含过期时间和用户会话信息等</p><p><strong>客户端保存的JWT格式(Authorization)：Header.Payload.Signature</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET /restful/products/1 HTTP/1.1</span><br><span class="line">Host: icyfenix.cn</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Authorization: Bearer eyJhbGciOiJXVCJ9.eyJ1c2VyXpeCJ9.539WMzbAn8bheflL8</span><br></pre></td></tr></table></figure><img src="C:\Users\彭思凯\AppData\Roaming\Typora\typora-user-images\image-20250519180502861.png" alt="image-20250519180502861"  /><h2 id="Cookie和Session的区别"><a href="#Cookie和Session的区别" class="headerlink" title="Cookie和Session的区别"></a>Cookie和Session的区别</h2><p>存储位置：Cookie存放在本地浏览器中，session存储在服务端中</p><p>存储大小：Cookie存放在浏览器中，大小是有限制的，不能超过4K；而session存储大小没有限制</p><p>安全性：因为Cookie存放在浏览器中，安全性较低；session存放在服务端中，安全性高一点</p><p>有效时间：Cookie有效时间比session长</p>]]></content>
       
+      
+      <categories>
+          
+          <category> 计算机网络知识 </category>
+          
+      </categories>
       
       
     </entry>
@@ -179,17 +229,6 @@
     
     
     <entry>
-      <title>关于</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>分类</title>
       <link href="/categories/index.html"/>
       <url>/categories/index.html</url>
@@ -201,9 +240,20 @@
     
     
     <entry>
-      <title>电影</title>
-      <link href="/movies/index.html"/>
-      <url>/movies/index.html</url>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>标签</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -223,9 +273,9 @@
     
     
     <entry>
-      <title>标签</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title>电影</title>
+      <link href="/movies/index.html"/>
+      <url>/movies/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
