@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>TCP的三次握手和四次挥手 | sky的小家</title><meta name="author" content="sky"><meta name="copyright" content="sky"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="4.1 TCP 三次握手与四次挥手面试题 | 小林coding学习笔记 TCP报文格式 TCP报文 &#x3D; TCP头部+TCP数据格式 TCP头部包含：  源端口 目标端口 序列号（保证TCP报文接收数据顺序和传递顺序是一致的，用来解决数据包乱序问题） 确认号（用来作为下一次期望收到的序列号，确保这个序号以前的数据包都被正常接收到，解决数据丢包问题） 等等  标志位：  SYN：请求建立连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP的三次握手和四次挥手">
+<meta property="og:url" content="https://legend578.github.io/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/index.html">
+<meta property="og:site_name" content="sky的小家">
+<meta property="og:description" content="4.1 TCP 三次握手与四次挥手面试题 | 小林coding学习笔记 TCP报文格式 TCP报文 &#x3D; TCP头部+TCP数据格式 TCP头部包含：  源端口 目标端口 序列号（保证TCP报文接收数据顺序和传递顺序是一致的，用来解决数据包乱序问题） 确认号（用来作为下一次期望收到的序列号，确保这个序号以前的数据包都被正常接收到，解决数据丢包问题） 等等  标志位：  SYN：请求建立连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0">
+<meta property="article:published_time" content="2025-06-29T06:08:59.000Z">
+<meta property="article:modified_time" content="2025-06-29T07:47:24.960Z">
+<meta property="article:author" content="sky">
+<meta property="article:tag" content="演示">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "TCP的三次握手和四次挥手",
+  "url": "https://legend578.github.io/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/",
+  "image": "https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0",
+  "datePublished": "2025-06-29T06:08:59.000Z",
+  "dateModified": "2025-06-29T07:47:24.960Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sky",
+      "url": "https://legend578.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/%5Bobject%20Object%5D"><link rel="canonical" href="https://legend578.github.io/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'TCP的三次握手和四次挥手',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(https://ts1.tc.mm.bing.net/th/id/R-C.f60c26775faac1dcc50e556ab04a4817?rik=5BnHDrd%2fItbFQA&amp;riu=http%3a%2f%2fp.qpic.cn%2fdnfbbspic%2f0%2fdnfbbs_dnfbbs_dnf_gamebbs_qq_com_forum_201908_21_070544bbcrklyullsn7b99.jpg%2f0&amp;ehk=UcrOvve%2bEazY%2b87LejIXEqlL8PFMUc3u%2fwwkjgRt1NA%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.b8cbe33904d9affe3149149220e19534?rik=T50IH99Lq%2bXOIQ&amp;riu=http%3a%2f%2fn.sinaimg.cn%2fsinacn10%2f105%2fw630h1075%2f20180515%2f6c76-hapkuvm0050641.jpg&amp;ehk=iRG3lzfyotG2fEJnXIvKPMnuPBnTHDL5J9bOmGfXxnU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&amp;riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&amp;ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">sky的小家</span></a><a class="nav-page-title" href="/"><span class="site-name">TCP的三次握手和四次挥手</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">TCP的三次握手和四次挥手</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-29T06:08:59.000Z" title="发表于 2025-06-29 14:08:59">2025-06-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-29T07:47:24.960Z" title="更新于 2025-06-29 15:47:24">2025-06-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;It has been&quot;,&quot;messageNext&quot;:&quot;days since the last update, the content of the article may be outdated.&quot;,&quot;postUpdate&quot;:&quot;2025-06-29 15:47:24&quot;}" hidden></div><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/network/3_tcp/tcp_interview.html#tcp-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84">4.1 TCP 三次握手与四次挥手面试题 | 小林coding</a>学习笔记</p>
+<h1 id="TCP报文格式"><a href="#TCP报文格式" class="headerlink" title="TCP报文格式"></a>TCP报文格式</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img2018.cnblogs.com/blog/1290987/201906/1290987-20190615111551823-1173939851.png" alt="img"></p>
+<p>TCP报文 &#x3D; TCP头部+TCP数据格式</p>
+<p>TCP头部包含：</p>
+<ul>
+<li>源端口</li>
+<li>目标端口</li>
+<li>序列号（保证TCP报文接收数据顺序和传递顺序是一致的，用来解决数据包乱序问题）</li>
+<li>确认号（用来作为下一次期望收到的序列号，确保这个序号以前的数据包都被正常接收到，解决数据丢包问题）</li>
+<li>等等</li>
+</ul>
+<p>标志位：</p>
+<ul>
+<li>SYN：请求建立连接</li>
+<li>ACK：确认接收到报文，为1时才认为该确认号有效，为0时表示没有确认信息</li>
+<li>FIN：请求断开连接</li>
+<li>RST：由于主机发生宕机等错误原因，该标志位用来重置连接</li>
+</ul>
+<h1 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a>TCP三次握手</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4/%E7%BD%91%E7%BB%9C/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.drawio.png" alt="TCP 三次握手"></p>
+<p>TCP三次握手是为了HTTP请求时建立TCP连接</p>
+<p>首先客户端和服务端都处于close状态（close表示没有建立连接，established表示处于连接状态），服务端首先会监听一个端口，处理listen状态</p>
+<h2 id="第一次握手"><a href="#第一次握手" class="headerlink" title="第一次握手"></a>第一次握手</h2><p>客户端会生成一个随机序号，并将该序号放入TCP报文的序列号字段中，对SYN标志位设置为1，这样即表示SYN报文。客户端将其SYN报文发送给服务端，之后客户端处于SYN_SENT状态，这个为TCP第一次握手</p>
+<h2 id="第二次握手"><a href="#第二次握手" class="headerlink" title="第二次握手"></a>第二次握手</h2><p>服务端收到客户端的SYN报文后，会将里面的客户端序号+1作为TCP报文的确认号字段，然后也会随机生成一个序号作为TCP报文的序列号字段，并且将SYN和ACK标志位设置为1。服务端会将SYN-ACK报文发送给客户端，之后服务端处于SYN_received状态。ACK是作为对客户端第一次握手的应答，SYN作为服务端第二次握手的发送请求建立连接信息。这是TCP第二次握手</p>
+<h2 id="第三次握手"><a href="#第三次握手" class="headerlink" title="第三次握手"></a>第三次握手</h2><p>客户端接收到服务端的SYN-ACK报文后，先会检验该报文的确认号是否合法，然后将该报文中的服务端序号+1作为TCP报文的确认号，并且设置ACK字段为1，表示该报文为ACK报文。最后将该报文发送给服务端，之后客户端处于established状态</p>
+<p>服务端收到ACK报文也处于established状态，这是第三次握手</p>
+<h1 id="TCP三次握手过程中丢包怎么办？"><a href="#TCP三次握手过程中丢包怎么办？" class="headerlink" title="TCP三次握手过程中丢包怎么办？"></a>TCP三次握手过程中丢包怎么办？</h1><h2 id="第一次握手丢包"><a href="#第一次握手丢包" class="headerlink" title="第一次握手丢包"></a>第一次握手丢包</h2><p>如果在第一次握手丢包，说明客户端的SYN报文没有发送给服务端。那么客户端会收不到服务端的SYN-ACK报文应答，则会超时重传SYN报文再次请求建立连接。如果达到最大重传次数，客户端会断开连接</p>
+<p>超时重传的时间由操作系统而定，一般为1s；当超时后会进行重传，并且每次超时时间为上一次的2倍，例如1s，2s，4s，8s重传</p>
+<h2 id="第二次握手丢包"><a href="#第二次握手丢包" class="headerlink" title="第二次握手丢包"></a>第二次握手丢包</h2><p>第二次握手丢包，说明服务端的SYN-ACK报文没有发送给客户端。客户端的第一次握手收不到SYN-ACK应答，同时服务端也收不到客户端第二次握手的ACK报文。那么结果就是客户端的第一次握手会超时重传SYN报文给服务端，同时服务端的第二次握手也会超时重传SYN-ACK报文给客户端</p>
+<h2 id="第三次握手丢包"><a href="#第三次握手丢包" class="headerlink" title="第三次握手丢包"></a>第三次握手丢包</h2><p>第三次握手丢包，说明客户端的ACK报文没有发送给服务端。服务端收不到ACK，报文则会在第二次握手的时候超时重传SYN-ACK报文给客户端</p>
+<h1 id="TCP的四次挥手"><a href="#TCP的四次挥手" class="headerlink" title="TCP的四次挥手"></a>TCP的四次挥手</h1><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.xiaolincoding.com//mysql/other/format,png-20230309230614791.png" alt="客户端主动关闭连接 —— TCP 四次挥手"></p>
+<p>TCP的四次挥手是为了断开TCP连接，客户端和服务端都可以作为主动关闭连接的一方</p>
+<p>TCP断开连接需要从established状态变为close状态</p>
+<h2 id="第一次挥手"><a href="#第一次挥手" class="headerlink" title="第一次挥手"></a>第一次挥手</h2><p>以客户端作为主动关闭连接一方为例，客户端会先发送FIN报文给服务端，之后客户端处于FIN_WAIT_1状态，表示客户端要关闭连接了</p>
+<h2 id="第二次挥手"><a href="#第二次挥手" class="headerlink" title="第二次挥手"></a>第二次挥手</h2><p>服务端接收到客户端的FIN报文后，会回复一个ACK报文给客户端，并且处于close_wait状态，表示服务端可能还有数据未发送完</p>
+<p>客户端收到该ACK报文后会处于FIN_wait_2状态，表示客户端等待服务端发送完数据</p>
+<h2 id="第三次挥手"><a href="#第三次挥手" class="headerlink" title="第三次挥手"></a>第三次挥手</h2><p>服务端发送完数据，可以关闭连接时会发送FIN报文给客户端，之后处于last_ack状态，表示可以关闭连接等待最后回复</p>
+<h2 id="第四次挥手"><a href="#第四次挥手" class="headerlink" title="第四次挥手"></a>第四次挥手</h2><p>客户端收到服务端的FIN报文后，会立马发送ACK应答报文（发送完ACK后会开始time_wait计时）给服务端，然后客户端开始进入time_wait（2MSL时间）状态中等待关闭连接。服务端收到ACK报文后会立马关闭连接</p>
+<h2 id="为什么time-wait状态需要2MSL？"><a href="#为什么time-wait状态需要2MSL？" class="headerlink" title="为什么time_wait状态需要2MSL？"></a>为什么time_wait状态需要2MSL？</h2><p>MSL：报文的最大存活时间</p>
+<p>以下拿客户端作为主动关闭连接方为例</p>
+<ul>
+<li><p>防止本次连接的历史报文影响新连接：将time_wait设置为2MSL是为了保证客户端（第四次握手的ACK）的服务端（第三次握手超时重传的FIN）两端的报文都消失后才断开连接，然后建立新连接</p>
+</li>
+<li><p>保证被动关闭连接方可以正常关闭：当客户端的第四次握手发送ACK报文给服务端，在这个过程中可能存在ACK丢包，则服务端会在第三次握手超时重传FIN报文，并且FIN报文会在第二个MSL内到达客户端。所以ACK报文丢包和超时重传FIN报文，这么一来一回需要2MSL</p>
+</li>
+</ul>
+<h2 id="time-wait过多有什么危害？"><a href="#time-wait过多有什么危害？" class="headerlink" title="time_wait过多有什么危害？"></a>time_wait过多有什么危害？</h2><ul>
+<li>服务端time_wait过多会导致浪费服务端资源，cpu资源，线程资源等</li>
+<li>客户端time_wait过多会导致占满客户端端口，无法对同一个服务端再发起HTTP请求</li>
+</ul>
+<p>客户端的time_wait过多：</p>
+<ul>
+<li>TCP连接是通过TCP四元组来唯一区分的，四元组：源ip，源端口，目标ip，目标端口</li>
+<li>当客户端对同一个服务端（源ip+源端口相同）具有大量time_wait状态时，会占满该客户端的端口资源（客户端端口资源是有限的），TCP连接的四元组不能相同。则客户端无法再对这个服务端建立TCP连接，但是该客户端端口可以对其他服务端建立连接，因为其他服务端的源ip+源端口是不同的</li>
+</ul>
+<p>服务端的time_wait过多：</p>
+<ul>
+<li>服务端只是监听端口，可以容纳许多客户端端口的请求，但是time_wait过多会浪费资源</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://legend578.github.io">sky</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://legend578.github.io/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">https://legend578.github.io/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://legend578.github.io" target="_blank">sky的小家</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&amp;riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&amp;ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/06/19/TLS%E5%8D%8F%E8%AE%AE/" title="TLS协议"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.9b34aeca90a0bfcf52bc0b3d966178ff?rik=PA2N4hbFQgEA%2fw&amp;riu=http%3a%2f%2fimg.52desk.com%2ftp%2f4b1801f2ef18be081c40bfa2b61cc8bd.jpg&amp;ehk=inLSd94mUAYsg9anHwqK35F7OI5mFtwEchXRgfGiYKE%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">TLS协议</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.b8cbe33904d9affe3149149220e19534?rik=T50IH99Lq%2bXOIQ&amp;riu=http%3a%2f%2fn.sinaimg.cn%2fsinacn10%2f105%2fw630h1075%2f20180515%2f6c76-hapkuvm0050641.jpg&amp;ehk=iRG3lzfyotG2fEJnXIvKPMnuPBnTHDL5J9bOmGfXxnU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sky</div><div class="author-info-description">个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/legend578"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/legend578" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:666@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">技术笔记or随心小计</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="toc-text">TCP报文格式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-text">TCP三次握手</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-text">第一次握手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-text">第二次握手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-text">第三次握手</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%B8%A2%E5%8C%85%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="toc-text">TCP三次握手过程中丢包怎么办？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%8C%85"><span class="toc-text">第一次握手丢包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%8C%85"><span class="toc-text">第二次握手丢包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%8C%85"><span class="toc-text">第三次握手丢包</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E7%9A%84%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">TCP的四次挥手</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">第一次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">第二次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">第三次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-text">第四次挥手</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88time-wait%E7%8A%B6%E6%80%81%E9%9C%80%E8%A6%812MSL%EF%BC%9F"><span class="toc-text">为什么time_wait状态需要2MSL？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#time-wait%E8%BF%87%E5%A4%9A%E6%9C%89%E4%BB%80%E4%B9%88%E5%8D%B1%E5%AE%B3%EF%BC%9F"><span class="toc-text">time_wait过多有什么危害？</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By sky</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
