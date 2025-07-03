@@ -4,6 +4,32 @@
   
     
     <entry>
+      <title>交换机和路由器的区别</title>
+      <link href="/2025/07/02/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+      <url>/2025/07/02/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<h1 id="交换机和路由器的区别"><a href="#交换机和路由器的区别" class="headerlink" title="交换机和路由器的区别"></a>交换机和路由器的区别</h1><ul><li><p>交换机：工作于数据链路层，主要处理数据帧的转发和交换，交换机根据MAC地址来转发数据包。实现同一局域网内的设备通信</p></li><li><p>路由器：工作于网络层，主要处理IP数据包的转发和路由，路由器根据IP地址来转发数据包，实现不同网络之间的通信</p></li></ul><h1 id="IP地址和MAC地址区别"><a href="#IP地址和MAC地址区别" class="headerlink" title="IP地址和MAC地址区别"></a>IP地址和MAC地址区别</h1><ul><li>IP地址：IP地址用于唯一标识网络空间的设备地址，他是网络层中的地址，实现不同网络的设备通信</li><li>MAC地址：用于唯一标识同一局域网内的设备地址，他是数据链路层的地址，实现同一局域网内的设备通信</li></ul><h1 id="有了IP地址为什么还需要MAC地址？"><a href="#有了IP地址为什么还需要MAC地址？" class="headerlink" title="有了IP地址为什么还需要MAC地址？"></a>有了IP地址为什么还需要MAC地址？</h1><ul><li><p>有IP地址，没有MAC地址：IP地址是根据所在的子网来分配的，DHCP协议为设备动态分配IP地址时，需要通过MAC地址来通信的</p></li><li><p>有MAC地址，没有IP地址：如果不存在IP地址，那么需要路由器记住每个设备所在的子网，那么路由器需要存放每个MAC地址，路由器是存放不下的</p></li></ul>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>TCP的可靠性</title>
+      <link href="/2025/07/01/TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/"/>
+      <url>/2025/07/01/TCP%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://xiaolincoding.com/network/3_tcp/tcp_feature.html%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0">https://xiaolincoding.com/network/3_tcp/tcp_feature.html学习笔记</a></p><h1 id="TCP的可靠性传输"><a href="#TCP的可靠性传输" class="headerlink" title="TCP的可靠性传输"></a>TCP的可靠性传输</h1><h2 id="TCP的可靠性怎么保证？"><a href="#TCP的可靠性怎么保证？" class="headerlink" title="TCP的可靠性怎么保证？"></a>TCP的可靠性怎么保证？</h2><ul><li><p>连接：TCP是面向连接的协议，在建立连接的时候需要三次握手，确保客户端和服务端双方都有发送和接受数据的能力</p></li><li><p>序列号和确认号：序列号可以保证数据传输的有序性；确认号可以保证传输的数据都被接收到，用来实现超时重传机制</p></li><li><p>数据包超时重传机制：当发送的数据包超过一定时间没有得到ACK应答（确认号为序列号+1），那么会进行重传，防止数据包的遗漏和丢失</p></li><li><p>流量控制机制：通过接收方的滑动窗口可以实现流量控制机制，接收方在ACK报文中告知滑动窗口大小，则告诉发送方：接收方还可以接受多少数据，发送方可以根据接收方接受数据的能力调整发送数据的速度</p></li><li><p>拥塞控制机制：拥塞控制作用是为了防止网络中传输的数据包过多，导致数据包的延时和丢失，主要通过慢启动，拥塞避免，拥塞发生，超时重传，快速重传，快速恢复等算法实现拥塞控制</p></li></ul><h2 id="流量控制和拥塞控制的区别"><a href="#流量控制和拥塞控制的区别" class="headerlink" title="流量控制和拥塞控制的区别"></a>流量控制和拥塞控制的区别</h2><ul><li>流量控制：负责端到端的控制，目的是防止发送方发送数据速度过快，接收方处理不过来，而导致发送的数据丢失或延时；通过滑动窗口实现，当接收方响应ACK报文时会告诉发送方自己还能接收数据的大小，发送方根据接收方的能力来发送数据</li><li>拥塞控制：负责网络层面的控制，目的是为了发送方发送的数据包过多，而导致阻塞整个网络空间；发送速度过快会拥塞网络，可能导致数据包传输的延时或丢失，当超时重传后会有更多的数据表累积在网络控制，拥塞情况更加严重；所以需要通过慢启动，拥塞避免，拥塞发生等一些算法来实现拥塞控制</li></ul><h2 id="拥塞控制如何实现？"><a href="#拥塞控制如何实现？" class="headerlink" title="拥塞控制如何实现？"></a>拥塞控制如何实现？</h2><p>主要通过以下几种算法实现：</p><h3 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h3><p>首先发送数据时会处于慢启动算法，发送数据大小为拥塞窗口大小（初始化为1，发送窗口&#x3D;min(接收窗口，拥塞窗口)），当每次发送的数据大小等量拥塞窗口大小后，拥塞窗口大小会翻倍增长，处于指数型增长</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/27.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="慢启动算法"></p><h3 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h3><p>当慢启动中的拥塞窗口大小达到慢启动门限（慢启动门限一般是固定的）后，会进入拥塞避免阶段；在拥塞避免阶段，每当发送数据大小等量拥塞窗口大小后，拥塞窗口大小会增加一个报文段大小，处于线性增长，原因是网络中已经存在一部分的数据包，网络可能马上要发送拥塞了，所以降低拥塞窗口增长速度，降低发送方发送的速度</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/28.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="拥塞避免"></p><h3 id="拥塞发生"><a href="#拥塞发生" class="headerlink" title="拥塞发生"></a>拥塞发生</h3><p>随着网络中数据包越来也多，可能发生网络拥塞而导致数据包的丢失，这时候就需要重传机制来找回丢失的数据包；主要包含两种重传机制：超时重传，快速重传</p><h4 id="超时重传"><a href="#超时重传" class="headerlink" title="超时重传"></a>超时重传</h4><p>当出现超时后，会进行超时重传数据包，并且将慢启动门限设置为当前拥塞窗口大小的一半，将当前拥塞窗口大小设置为初始值1，此时会重新进入慢启动状态，发送速度会降低很多</p><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP-%E5%8F%AF%E9%9D%A0%E7%89%B9%E6%80%A7/29.jpg?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="拥塞发送 —— 超时重传"></p><h4 id="快速重传（负责处理单个数据包丢失情况）"><a href="#快速重传（负责处理单个数据包丢失情况）" class="headerlink" title="快速重传（负责处理单个数据包丢失情况）"></a>快速重传（负责处理单个数据包丢失情况）</h4><ul><li><p>在超时重传触发前，如果收到了三个重复的ACK报文（说明传输过程中有单个数据包丢失，并不需要像超时重传那样直接将拥塞窗口设置为1，发送速度会大大降低，影响网络传输速度），则会触发快速重传，并且将拥塞窗口大小设置为当前拥塞窗口大小的一半，慢启动门限设置为变化后的拥塞窗口大小</p></li><li><p>快速重传之后会进入快速恢复阶段，将拥塞窗口设置为慢启动门限+3（此时网络空间不是特别拥塞，并且之前已经收到3个重复的ACK报文，说明发送出去三个数据包，但没有被接收到，却又占用拥塞窗口，此时不会重传该三个数据包，由此可以知道拥塞窗口可以再大一些。所以这里尝试+3，让重传的数据尽快发送出去），如果后续还收到重复的ACK则拥塞窗口+1，直到收到新数据的ACK报文后拥塞窗口变为慢启动门限值，之后进入拥塞避免阶段，发送速度不会降低很多</p></li></ul><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/%E7%BD%91%E7%BB%9C/%E6%8B%A5%E5%A1%9E%E5%8F%91%E7%94%9F-%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="快速重传和快速恢复"></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>TCP的三次握手和四次挥手</title>
       <link href="/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/"/>
       <url>/2025/06/29/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</url>
@@ -242,31 +268,9 @@
     
     
     <entry>
-      <title>关于</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>分类</title>
       <link href="/categories/index.html"/>
       <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>电影</title>
-      <link href="/movies/index.html"/>
-      <url>/movies/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -286,9 +290,31 @@
     
     
     <entry>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>标签</title>
       <link href="/tags/index.html"/>
       <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>电影</title>
+      <link href="/movies/index.html"/>
+      <url>/movies/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
