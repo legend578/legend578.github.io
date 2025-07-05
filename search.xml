@@ -8,7 +8,7 @@
       <link href="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/"/>
       <url>/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/</url>
       
-        <content type="html"><![CDATA[<h1 id="对于Hexo博客的粘贴图片无法插入问题解决"><a href="#对于Hexo博客的粘贴图片无法插入问题解决" class="headerlink" title="对于Hexo博客的粘贴图片无法插入问题解决"></a>对于Hexo博客的粘贴图片无法插入问题解决</h1><p>我使用的是Typora编辑器写的博客，所以该解决方法针对该编辑器来解决</p><h2 id="1-在vscode中先修改根目录下的配置文件-config-yml里的信息"><a href="#1-在vscode中先修改根目录下的配置文件-config-yml里的信息" class="headerlink" title="1.在vscode中先修改根目录下的配置文件&#x2F;_config.yml里的信息"></a>1.在vscode中先修改根目录下的配置文件&#x2F;_config.yml里的信息</h2><p>将post_asset_folder字段修改为true</p><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705104822825.png" alt="image-20250705104822825"></p><h2 id="2-修改Typora图片粘贴路径"><a href="#2-修改Typora图片粘贴路径" class="headerlink" title="2.修改Typora图片粘贴路径"></a>2.修改Typora图片粘贴路径</h2><ul><li>进入Typora，文件&#x3D;》偏好设置</li></ul><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705104924457.png" alt="image-20250705104924457"></p><ul><li>将图像设置修改为和我的一致</li><li><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705105032102.png" alt="image-20250705105032102"></li></ul><h2 id="3-打开vscode终端控制台，下载插件"><a href="#3-打开vscode终端控制台，下载插件" class="headerlink" title="3.打开vscode终端控制台，下载插件"></a>3.打开vscode终端控制台，下载插件</h2><p>将该条代码放到终端运行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-asset-img --save</span><br></pre></td></tr></table></figure><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705105311693.png" alt="image-20250705105311693"></p><h2 id="4-重新加载，图片显示成功"><a href="#4-重新加载，图片显示成功" class="headerlink" title="4.重新加载，图片显示成功"></a>4.重新加载，图片显示成功</h2><p>放到终端运行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo cl;hexo g;hexo s</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h1 id="对于Hexo博客的粘贴图片无法插入问题解决"><a href="#对于Hexo博客的粘贴图片无法插入问题解决" class="headerlink" title="对于Hexo博客的粘贴图片无法插入问题解决"></a>对于Hexo博客的粘贴图片无法插入问题解决</h1><p>我使用的是Typora编辑器写的博客，所以该解决方法针对该编辑器来解决</p><h2 id="1-在vscode中先修改根目录下的配置文件-config-yml里的信息"><a href="#1-在vscode中先修改根目录下的配置文件-config-yml里的信息" class="headerlink" title="1.在vscode中先修改根目录下的配置文件&#x2F;_config.yml里的信息"></a>1.在vscode中先修改根目录下的配置文件&#x2F;_config.yml里的信息</h2><p>将post_asset_folder字段修改为true</p><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705104822825.png" alt="image-20250705104822825"></p><h2 id="2-修改Typora图片粘贴路径"><a href="#2-修改Typora图片粘贴路径" class="headerlink" title="2.修改Typora图片粘贴路径"></a>2.修改Typora图片粘贴路径</h2><ul><li>进入Typora，文件&#x3D;》偏好设置</li></ul><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705104924457.png" alt="image-20250705104924457"></p><ul><li>将图像设置修改为和我的一致</li><li><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705105032102.png" alt="image-20250705105032102"></li></ul><h2 id="3-打开vscode终端控制台，下载插件"><a href="#3-打开vscode终端控制台，下载插件" class="headerlink" title="3.打开vscode终端控制台，下载插件"></a>3.打开vscode终端控制台，下载插件</h2><p>将该条代码放到终端运行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-asset-img --save</span><br></pre></td></tr></table></figure><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705105311693.png" alt="image-20250705105311693"></p><h2 id="4-重新加载，图片显示成功"><a href="#4-重新加载，图片显示成功" class="headerlink" title="4.重新加载，图片显示成功"></a>4.重新加载，图片显示成功</h2><p>放到终端运行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo cl;hexo g;hexo s</span><br></pre></td></tr></table></figure><p><img src="/2025/07/05/hexo%E6%8F%92%E5%85%A5%E7%9A%84%E5%9B%BE%E7%89%87%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E8%A7%A3%E5%86%B3/image-20250705105525563.png" alt="image-20250705105525563"></p><p>最终加载到github更新</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>]]></content>
       
       
       
@@ -342,17 +342,6 @@
     
     
     <entry>
-      <title>分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>电影</title>
       <link href="/movies/index.html"/>
       <url>/movies/index.html</url>
@@ -364,9 +353,9 @@
     
     
     <entry>
-      <title>标签</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title>分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -378,6 +367,17 @@
       <title>友链</title>
       <link href="/link/index.html"/>
       <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>标签</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
