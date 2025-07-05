@@ -61,8 +61,8 @@ social:
 # --------------------------------------
 
 favicon: 
-  img: https://c-ssl.dtstatic.com/uploads/item/202005/24/20200524001508_adrpn.thumb.400_0.jpg
-  effect: flase
+  img: /img/websiteAvatar/dog.png
+  effect: false
 avatar:
   img: https://ts1.tc.mm.bing.net/th/id/R-C.b8cbe33904d9affe3149149220e19534?rik=T50IH99Lq%2bXOIQ&riu=http%3a%2f%2fn.sinaimg.cn%2fsinacn10%2f105%2fw630h1075%2f20180515%2f6c76-hapkuvm0050641.jpg&ehk=iRG3lzfyotG2fEJnXIvKPMnuPBnTHDL5J9bOmGfXxnU%3d&risl=&pid=ImgRaw&r=0
   effect: false

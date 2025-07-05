@@ -27,3 +27,4 @@ hexo d（使得网站重新生效）
 
 ## 怎么在博客中插入图片
 使用<img src="/img/vscode1.png" width="auto" height="auto">，使用img标签即可，src填写图片路径，可以是外部图片，也可以是本机图片
+

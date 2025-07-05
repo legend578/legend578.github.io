@@ -40,7 +40,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -63,6 +63,9 @@ index_generator:
   path: ''
   per_page: 6
   order_by: -date
+
+favicon: 
+  img: /img/websiteAvatar/dog.png
 
 # Category & Tag
 default_category: uncategorized
@@ -100,10 +103,14 @@ theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
+
 deploy:
   type: git
   repo: https://github.com/legend578/legend578.github.io.git
   branch: master
+# deploy:
+#   type: git
+#   repo: git@117.72.213.26:/home/repo/hexo.git
 
 search:
   path: search.xml
