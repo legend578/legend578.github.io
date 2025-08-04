@@ -2,7 +2,7 @@
 title: vscode更新博客要点
 date: 2025-04-15 20:23:40
 categories: # 分类
-	- 博客初始化  # 只能由一个
+	- 博客相关修改  # 只能由一个
 tags: # 标签
 	- 博客怎么更新  # 能有多个
 ---
@@ -27,4 +27,3 @@ hexo d（使得网站重新生效）
 
 ## 怎么在博客中插入图片
 使用<img src="/img/vscode1.png" width="auto" height="auto">，使用img标签即可，src填写图片路径，可以是外部图片，也可以是本机图片
-

@@ -64,8 +64,9 @@ index_generator:
   per_page: 6
   order_by: -date
 
-favicon: 
-  img: /img/websiteAvatar/dog.png
+favicon:
+  small: /img/favicon16.ico
+  medium: /img/favicon32.ico
 
 # Category & Tag
 default_category: uncategorized
