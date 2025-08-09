@@ -28,27 +28,22 @@ menu:
 # --------------------------------------
 # Code Blocks Settings
 # --------------------------------------
-highlight_theme: mac  #  darker / pale night / light / ocean / mac / mac light / false 代码主题
-highlight_copy: true # 复制按钮
-highlight_lang: false # 是否显示代码语言
-highlight_shrink: false # true: 代码块默认不展开 / false: 代码块默认展开 | none: 展开并隐藏折叠按钮
-highlight_height_limit: false # unit: px
-code_word_wrap: true #代码自动换行，关闭滚动条
+highlight_theme: mac  # 可选 darker / pale night / light / ocean / mac / mac light / false
+highlight_copy: true  # 是否显示复制按钮
+highlight_lang: true  # 是否显示代码语言
+highlight_shrink: true  # 是否默认折叠代码块
+code_word_wrap: true  # 代码是否自动换行
 
+# 代码块主题设置
 code_blocks:
-  # Code block theme: darker / pale night / light / ocean / false
-  theme: light
-  macStyle: false
-  # Code block height limit (unit: px)
-  height_limit: false
-  word_wrap: false
-
-  # Toolbar
-  copy: true
-  language: true
-  # true: shrink the code blocks | false: expand the code blocks | none: expand code blocks and hide the button
-  shrink: false
-  fullpage: false
+  theme: pale night  # 可选 darker / pale night / light / ocean / false
+  macStyle: false  # 是否启用Mac风格窗口（带红黄绿按钮）
+  height_limit: false  # 高度限制（单位px）
+  word_wrap: false  # 是否自动换行
+  copy: true  # 是否显示复制按钮
+  language: true  # 是否显示语言标签
+  shrink: false  # 是否默认折叠
+  fullpage: false  # 是否全屏显示
 
 # Social media links
 # Formal:
@@ -71,47 +66,78 @@ avatar:
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img:
+default_top_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # The banner image of index page
 index_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # The banner image of archive page
-archive_img:
+archive_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # Note: tag page, not tags page
-tag_img:
+tag_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # The banner image of tag page, you can set the banner image for each tag
 # Format:
 #  - tag name: xxxxx
-tag_per_img:
+tag_per_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # Note: category page, not categories page
-category_img:
+category_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # The banner image of category page, you can set the banner image for each category
 # Format:
 #  - category name: xxxxx
-category_per_img:
+category_per_img: https://i.postimg.cc/rFfcYG9Y/index-img.jpg
 
 # The background image of footer
-footer_img: false
+footer_img: false 
+footer_bg: true
 
 # Website Background
 # Can set it to color or image url
-background: https://ts1.tc.mm.bing.net/th/id/R-C.f60c26775faac1dcc50e556ab04a4817?rik=5BnHDrd%2fItbFQA&riu=http%3a%2f%2fp.qpic.cn%2fdnfbbspic%2f0%2fdnfbbs_dnfbbs_dnf_gamebbs_qq_com_forum_201908_21_070544bbcrklyullsn7b99.jpg%2f0&ehk=UcrOvve%2bEazY%2b87LejIXEqlL8PFMUc3u%2fwwkjgRt1NA%3d&risl=&pid=ImgRaw&r=0
-
+background: "linear-gradient(to bottom, #ffffff, #f8f9fa)"
 cover:
   # Disable the cover or not
   index_enable: true
-  aside_enable: true
+  aside_enable: false
   archives_enable: true
   # When cover is not set, the default cover is displayed
   default_cover:
     - https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0
     - https://ts1.tc.mm.bing.net/th/id/R-C.9b34aeca90a0bfcf52bc0b3d966178ff?rik=PA2N4hbFQgEA%2fw&riu=http%3a%2f%2fimg.52desk.com%2ftp%2f4b1801f2ef18be081c40bfa2b61cc8bd.jpg&ehk=inLSd94mUAYsg9anHwqK35F7OI5mFtwEchXRgfGiYKE%3d&risl=&pid=ImgRaw&r=0
     - https://img.shetu66.com/2023/11/22/1700641745624382.jpg
+custom_css: |
+  /* 强制三列布局 */
+  #recent-posts {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(300px, 1fr)) !important;
+    gap: 20px !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  /* 修复卡片宽度 */
+  .recent-post-item {
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 禁用主题自带的浮动布局 */
+  #recent-posts .recent-post-item {
+    float: none !important;
+    width: auto !important;
+  }
+
+  /* 移动端适配 */
+  @media (max-width: 1200px) {
+    #recent-posts { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 768px) {
+    #recent-posts { grid-template-columns: 1fr !important; }
+  }
+  
 
 # Replace Broken Images
 error_img:
@@ -186,7 +212,7 @@ subtitle:
 # 5: Info displayed on the cover
 # 6: Masonry layout - Cover on top, info on the bottom
 # 7: Masonry layout - Info displayed on the cover
-index_layout: 3
+index_layout: 6
 
 # Display the article introduction on homepage
 # 1: description
@@ -271,10 +297,9 @@ noticeOutdate:
 footer:
   owner:
     enable: true
-    since: 2022
-  custom_text:
-  # Copyright of theme and framework
-  copyright: true
+    since: 2022	# 站点起始时间
+  custom_text: I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p>
+  copyright: false # Copyright of theme and framework
 
 # --------------------------------------
 # Aside Settings
@@ -733,6 +758,11 @@ theme_color:
   scrollbar_color: "#49b1f5"
   meta_theme_color_light: "ffffff"
   meta_theme_color_dark: "#0d0d0d"
+  footer_bg: "#f0f0f0"   # 浅灰色背景
+  footer_text: "#333333" # 深灰色文字
+  footer_link: "#555555" # 灰色链接
+  footer_link_hover: "#000000" # 悬停时黑色
+  
 
 # The user interface setting of category and tag page
 # Choose: index - same as Homepage UI / default - same as archives UI
