@@ -39,7 +39,7 @@ code_blocks:
   theme: pale night  # 可选 darker / pale night / light / ocean / false
   macStyle: false  # 是否启用Mac风格窗口（带红黄绿按钮）
   height_limit: false  # 高度限制（单位px）
-  word_wrap: false  # 是否自动换行
+  word_wrap: true  # 是否自动换行
   copy: true  # 是否显示复制按钮
   language: true  # 是否显示语言标签
   shrink: false  # 是否默认折叠
