@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SQL如何调优 | sky的小家</title><meta name="author" content="sky"><meta name="copyright" content="sky"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="SQL调优可以根据几个方面来讲述： 1.索引调优主键索引优化 尽量使用自增的值作为主键，当主键是自增的时候，每条数据都是追加写入，主键索引的B+树的叶子结点按照主键值顺序从左到右有序排放，写入新数据都会直接放入最右边的叶子结点处。当数据页满了，则开辟一个新的数据页放入结点 如果主键不是自增的话，新数据的主键值可能会在数据页中间的某个位置，那么此时就需要移动数据页中的结点来保证新数据插入的有序性，更">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL如何调优">
+<meta property="og:url" content="https://legend578.github.io/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/index.html">
+<meta property="og:site_name" content="sky的小家">
+<meta property="og:description" content="SQL调优可以根据几个方面来讲述： 1.索引调优主键索引优化 尽量使用自增的值作为主键，当主键是自增的时候，每条数据都是追加写入，主键索引的B+树的叶子结点按照主键值顺序从左到右有序排放，写入新数据都会直接放入最右边的叶子结点处。当数据页满了，则开辟一个新的数据页放入结点 如果主键不是自增的话，新数据的主键值可能会在数据页中间的某个位置，那么此时就需要移动数据页中的结点来保证新数据插入的有序性，更">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0">
+<meta property="article:published_time" content="2025-08-14T03:28:26.000Z">
+<meta property="article:modified_time" content="2025-08-14T06:08:19.427Z">
+<meta property="article:author" content="sky">
+<meta property="article:tag" content="演示">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SQL如何调优",
+  "url": "https://legend578.github.io/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/",
+  "image": "https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&risl=&pid=ImgRaw&r=0",
+  "datePublished": "2025-08-14T03:28:26.000Z",
+  "dateModified": "2025-08-14T06:08:19.427Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "sky",
+      "url": "https://legend578.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/%5Bobject%20Object%5D"><link rel="canonical" href="https://legend578.github.io/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SQL如何调优',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: linear-gradient(to bottom, #ffffff, #f8f9fa);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.b8cbe33904d9affe3149149220e19534?rik=T50IH99Lq%2bXOIQ&amp;riu=http%3a%2f%2fn.sinaimg.cn%2fsinacn10%2f105%2fw630h1075%2f20180515%2f6c76-hapkuvm0050641.jpg&amp;ehk=iRG3lzfyotG2fEJnXIvKPMnuPBnTHDL5J9bOmGfXxnU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&amp;riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&amp;ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">sky的小家</span></a><a class="nav-page-title" href="/"><span class="site-name">SQL如何调优</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">SQL如何调优</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-08-14T03:28:26.000Z" title="发表于 2025-08-14 11:28:26">2025-08-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-08-14T06:08:19.427Z" title="更新于 2025-08-14 14:08:19">2025-08-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;It has been&quot;,&quot;messageNext&quot;:&quot;days since the last update, the content of the article may be outdated.&quot;,&quot;postUpdate&quot;:&quot;2025-08-14 14:08:19&quot;}" hidden></div><p>SQL调优可以根据几个方面来讲述：</p>
+<h1 id="1-索引调优"><a href="#1-索引调优" class="headerlink" title="1.索引调优"></a>1.索引调优</h1><h2 id="主键索引优化"><a href="#主键索引优化" class="headerlink" title="主键索引优化"></a>主键索引优化</h2><ul>
+<li>尽量使用自增的值作为主键，当主键是自增的时候，<strong>每条数据都是追加写入</strong>，主键索引的B+树的叶子结点按照主键值顺序从左到右有序排放，写入新数据都会直接放入最右边的叶子结点处。当数据页满了，则开辟一个新的数据页放入结点</li>
+<li>如果主键不是自增的话，新数据的主键值可能会在数据页中间的某个位置，那么此时就需要移动数据页中的结点来保证新数据插入的有序性，更严重的情况会导致页分裂问题—&gt;需要将数据从旧数据页复制到新数据页，页分裂后果是会导致数据页产生大量内存碎片，索引·结构不紧凑，查询数据时性能降低</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/image-20250814114130068.png" alt="image-20250814114130068"></p>
+<h2 id="覆盖索引优化"><a href="#覆盖索引优化" class="headerlink" title="覆盖索引优化"></a>覆盖索引优化</h2><ul>
+<li><p>覆盖索引：当查询的字段值在二级索引中存在，就可以使用到覆盖索引直接返回所需的数据，不需要再次回表查询主键索引</p>
+</li>
+<li><p>怎么实现：比如<code>select id,name,age where name=?</code>，可以建立（name，age）联合索引，当扫描这个联合索引找到对应的记录时，由于该联合索引中已经存在id（主键值）,name,age这几个字段值数据，直接返回即可，避免多一次回表操作</p>
+</li>
+</ul>
+<h2 id="前缀索引优化"><a href="#前缀索引优化" class="headerlink" title="前缀索引优化"></a>前缀索引优化</h2><p>针对于一些大字符串字段，可以对该字符串的前几个字符建立前缀索引，使字符串按照前缀有序排放，减小了索引的存储空间，可以使得一个数据页存放更多的索引，加快索引查询</p>
+<h2 id="防止索引失效"><a href="#防止索引失效" class="headerlink" title="防止索引失效"></a>防止索引失效</h2><p>在使用索引过程中，编写SQL语句时尽量避免左模糊查询，左右模糊查询（like %name%)，对索引列计算，使用函数，类型转换，没有遵循联合索引的最左匹配原则，这些情况都会导致索引失效</p>
+<h1 id="2-SQL层调优"><a href="#2-SQL层调优" class="headerlink" title="2.SQL层调优"></a>2.SQL层调优</h1><h2 id="分批操作"><a href="#分批操作" class="headerlink" title="分批操作"></a>分批操作</h2><ul>
+<li>当需要对一大批数据进行操作（增删改查）时，可以使用<strong>循环分页处理</strong>（死循环分页处理，当需要处理的数据为空时则退出循环）的方式，将一大批数据处理分为多个小批数据的处理。避免大事务的发生</li>
+<li>深分页场景：当limit中偏移量过大时，前面的偏移量都是不需要的数据，<code>LIMIT 10000,20</code>会读取10020行然后丢弃前10000行</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT id FROM users WHERE condition ORDER BY id LIMIT <span class="number">10000</span>,<span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<p>优化思路：记录上一次查询出来的id，作为当前查询的过滤条件；实现效果就像朋友圈一样，数据翻页都是上一条，下一条</p>
+<p>将查询到的最后一个id作为下一次分页查询的last_id</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id from users ORDER BY id LIMIT 20</span><br></pre></td></tr></table></figure>
+
+<p>通过查询到的last_id，可以从该记录开始继续查询后面的数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE id &gt; last_id ORDER BY id LIMIT 20;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="order-by-group-by优化"><a href="#order-by-group-by优化" class="headerlink" title="order by,group by优化"></a>order by,group by优化</h2><ul>
+<li><p>需要使用order by和group by的sql语句，如果排序和分组的字段不存在索引，由于该字段值数据不是有序的，所以会用到using filesort和using temporary（外部排序和使用临时表），这两个操作会涉及到磁盘IO，大大降低操作效率</p>
+</li>
+<li><p>优化：对需要order by和group by的字段建立索引（也可以和其他查询条件中出现的字段建立联合索引），因为索引数据天然就是有序的，所以order by和group by避免的额外操作来保证有序，提高查询效率</p>
+</li>
+</ul>
+<h2 id="分解联表查询"><a href="#分解联表查询" class="headerlink" title="分解联表查询"></a>分解联表查询</h2><p>联表查询是数据库性能的常见瓶颈，特别是当表数据量大或关联条件复杂时</p>
+<p>优化方案：</p>
+<ul>
+<li><p>可以对联表查询分解为多个单表查询，在业务层将数据聚合</p>
+</li>
+<li><p>给数据表添加冗余字段，减少联表查询</p>
+</li>
+</ul>
+<h1 id="3-数据库连接池调优"><a href="#3-数据库连接池调优" class="headerlink" title="3.数据库连接池调优"></a>3.数据库连接池调优</h1><p><strong>配置参数</strong>：</p>
+<ul>
+<li>初始连接数：<code>initialSize</code></li>
+<li>最大连接数：<code>maxActive</code></li>
+<li>最大等待时间：<code>maxWait</code></li>
+<li>最小空闲连接：<code>minIdle</code></li>
+</ul>
+<h1 id="4-MySQL层调优"><a href="#4-MySQL层调优" class="headerlink" title="4.MySQL层调优"></a>4.MySQL层调优</h1><ul>
+<li><p><strong>主从复制</strong>：针对于读多写少的场景可以搭建MySQL主从复制</p>
+</li>
+<li><p><strong>分库</strong>：针对写多读少的场景，单库的性能无法抗住高并发流量，就需要进行分库，把并发请求分散到多<br>个实例中去。</p>
+</li>
+<li><p><strong>分表</strong>：如果表的数据量很大，比如表数据千万级别了，这时候可以考虑分表了，通过减少每次查询数据<br>总量来解决数据查询缓慢的问题。</p>
+</li>
+<li><p><strong>Redis缓存</strong>：对于需要频繁读取的热点数据存入Redis，减小MySQL的查询压力</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://legend578.github.io">sky</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://legend578.github.io/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/">https://legend578.github.io/2025/08/14/SQL%E5%A6%82%E4%BD%95%E8%B0%83%E4%BC%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://legend578.github.io" target="_blank">sky的小家</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://ts1.tc.mm.bing.net/th/id/R-C.014342e5da2d2edbc7ed276a340b9ade?rik=6mlgLSKlLlKx0w&amp;riu=http%3a%2f%2fimg.zcool.cn%2fcommunity%2f01936a58be7362a801219c77fe8358.jpg%402o.jpg&amp;ehk=biIJF7OQgF2%2bIzEcRuD%2bFhUddJeZs23CgtlTGXZ%2fcHU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/08/13/update%E8%AF%AD%E5%8F%A5%E6%93%8D%E4%BD%9C%E6%97%B6%E5%A6%82%E4%BD%95%E5%8A%A0%E9%94%81/" title="update语句操作时如何加锁"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.9b34aeca90a0bfcf52bc0b3d966178ff?rik=PA2N4hbFQgEA%2fw&amp;riu=http%3a%2f%2fimg.52desk.com%2ftp%2f4b1801f2ef18be081c40bfa2b61cc8bd.jpg&amp;ehk=inLSd94mUAYsg9anHwqK35F7OI5mFtwEchXRgfGiYKE%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">update语句操作时如何加锁</div></div><div class="info-2"><div class="info-item-1">update语句操作时是怎么加锁的？InnoDB加锁是在索引上加锁的，所以update操作加锁需要分情况讨论 在可重复读隔离级别中：例如update table1 set age &#x3D; 18 where name &#x3D;...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://ts1.tc.mm.bing.net/th/id/R-C.b8cbe33904d9affe3149149220e19534?rik=T50IH99Lq%2bXOIQ&amp;riu=http%3a%2f%2fn.sinaimg.cn%2fsinacn10%2f105%2fw630h1075%2f20180515%2f6c76-hapkuvm0050641.jpg&amp;ehk=iRG3lzfyotG2fEJnXIvKPMnuPBnTHDL5J9bOmGfXxnU%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">sky</div><div class="author-info-description">个人博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/legend578"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/legend578" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:666@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">技术笔记or随心小计</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%B4%A2%E5%BC%95%E8%B0%83%E4%BC%98"><span class="toc-text">1.索引调优</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="toc-text">主键索引优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="toc-text">覆盖索引优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95%E4%BC%98%E5%8C%96"><span class="toc-text">前缀索引优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E6%AD%A2%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88"><span class="toc-text">防止索引失效</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-SQL%E5%B1%82%E8%B0%83%E4%BC%98"><span class="toc-text">2.SQL层调优</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%89%B9%E6%93%8D%E4%BD%9C"><span class="toc-text">分批操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#order-by-group-by%E4%BC%98%E5%8C%96"><span class="toc-text">order by,group by优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E8%A7%A3%E8%81%94%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="toc-text">分解联表查询</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5%E6%B1%A0%E8%B0%83%E4%BC%98"><span class="toc-text">3.数据库连接池调优</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-MySQL%E5%B1%82%E8%B0%83%E4%BC%98"><span class="toc-text">4.MySQL层调优</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By sky</div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
